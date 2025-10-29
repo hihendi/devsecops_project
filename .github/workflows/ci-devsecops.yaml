@@ -59,8 +59,8 @@ jobs:
         run: pip install pip-audit
       - name: Run SCA (pip-audit) and Save Report
         run: |
-          pip-audit -r requirements.txt --format json > pip-audit.json || true
-          pip-audit -r dev-requirements.txt --format json > pip-audit-dev.json || true
+          pip-audit -r requirements.txt --format json > pip-audit.json
+          pip-audit -r dev-requirements.txt --format json > pip-audit-dev.json
       - name: Upload pip-audit SCA Report
         uses: actions/upload-artifact@v4
         with:
