@@ -59,8 +59,9 @@ jobs:
         run: pip install pip-audit
       - name: Run SCA (pip-audit) and Save Report
         run: |
-          pip-audit -r requirements.txt --format json > pip-audit.json
-          pip-audit -r dev-requirements.txt --format json > pip-audit-dev.json
+          pip-audit -r requirements.txt --format json > pip-audit.json || true
+          pip-audit -r dev-requirements.txt --format json > pip-audit-dev.json || true
+          echo "PIP_AUDIT_EXIT_CODE=$?" >> $GITHUB_ENV
       - name: Upload pip-audit SCA Report
         uses: actions/upload-artifact@v4
         with:
@@ -68,6 +69,11 @@ jobs:
           path: |
             pip-audit.json
             pip-audit-dev.json
+      - name: Stop Pipeline if Vulnerabilities Found
+        if: env.PIP_AUDIT_EXIT_CODE == '1'
+        run: |
+          echo "::error::SCA Scan (pip-audit) failed due to vulnerabilities. Stopping build."
+          exit 1
 
   # 4. Job: Secret Scan (Gitleaks) - Dijalankan jika unit_test berhasil
   secret_scan:
