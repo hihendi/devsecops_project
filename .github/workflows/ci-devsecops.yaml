@@ -23,7 +23,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r dev-requirements.txt
       - name: Run Unit Tests (pytest)
-        run: pytest
+        run: PYTHONPATH=. pytest -q
 
   # 2. Job: SAST (Bandit) - Dijalankan jika unit_test berhasil
   sast_scan:
