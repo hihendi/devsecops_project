@@ -59,15 +59,15 @@ jobs:
         run: pip install pip-audit
       - name: Run SCA (pip-audit) and Save Report
         run: |
-          echo "--- requirements.txt Report ---" > sca-pip-audit-report.txt
-          pip-audit -r requirements.txt >> sca-pip-audit-report.txt
-          echo -e "\n--- dev-requirements.txt Report ---" >> sca-pip-audit-report.txt
-          pip-audit -r dev-requirements.txt >> sca-pip-audit-report.txt
+          pip-audit -r requirements.txt --format json > pip-audit.json
+          pip-audit -r dev-requirements.txt --format json > pip-audit-dev.json
       - name: Upload pip-audit SCA Report
         uses: actions/upload-artifact@v4
         with:
           name: sca-pip-audit-report
-          path: sca-pip-audit-report.txt
+          path: |
+            pip-audit.json
+            pip-audit-dev.json
 
   # 4. Job: Secret Scan (Gitleaks) - Dijalankan jika unit_test berhasil
   secret_scan:
